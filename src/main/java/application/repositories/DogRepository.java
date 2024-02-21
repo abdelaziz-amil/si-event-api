@@ -1,6 +1,6 @@
-package com.repositories;
+package application.repositories;
 
-import com.entities.Dog;
+import application.entities.Dog;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

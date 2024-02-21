@@ -1,4 +1,4 @@
-package com.dtos;
+package application.dtos;
 
 import lombok.Data;
 

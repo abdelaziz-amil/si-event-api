@@ -1,6 +1,6 @@
-package com.services;
+package application.services;
 
-import com.dtos.DogDto;
+import application.dtos.DogDto;
 
 import java.util.List;
 

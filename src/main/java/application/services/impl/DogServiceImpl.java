@@ -1,9 +1,9 @@
-package com.services.impl;
+package application.services.impl;
 
-import com.dtos.DogDto;
-import com.entities.Dog;
-import com.repositories.DogRepository;
-import com.services.DogService;
+import application.dtos.DogDto;
+import application.repositories.DogRepository;
+import application.entities.Dog;
+import application.services.DogService;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
