@@ -31,7 +31,7 @@ public class MembresServiceImpl implements MembresService {
 
     @Override
     public MembresDto getMembreById(Long membreId) {
-        Membres membres = membresRepository.findById(membreId).orElseThrow(() -> new EntityNotFoundException("Membres not found"));
+        Membres membres = membresRepository.findById(membreId).orElseThrow(() -> new EntityNotFoundException("Membre introuvable"));
         return membreEntityToDto(membres);
     }
 
