@@ -30,8 +30,8 @@ public class MembresController {
 	 * Method to get the member based on the ID
 	 */
 	@GetMapping("/{membreId}")
-	public MembresDto getMembre(@PathVariable Long id){
-		return membresService.getMembreById(id);
+	public MembresDto getMembre(@PathVariable Long membreId){
+		return membresService.getMembreById(membreId);
 	}
 
 	/**
@@ -46,8 +46,8 @@ public class MembresController {
 	 * Delete a member by it's id
 	 */
 	@DeleteMapping("/{membreId}")
-	public Boolean deleteMembre(@PathVariable Long id){
-		return membresService.deleteMembre(id);
+	public Boolean deleteMembre(@PathVariable Long membreId){
+		return membresService.deleteMembre(membreId);
 	}
 	
 }
