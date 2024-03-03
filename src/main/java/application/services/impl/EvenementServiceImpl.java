@@ -4,7 +4,6 @@ import application.dtos.EvenementsDto;
 import application.entities.Evenements;
 import application.entities.Membres;
 import application.repositories.EvenementsRepository;
-import application.repositories.MembresRepository;
 import application.services.EvenementsService;
 import org.springframework.stereotype.Service;
 

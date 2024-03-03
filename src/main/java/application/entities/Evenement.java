@@ -23,7 +23,7 @@ public class Evenements {
 	@JoinTable(
 					name = "evenements_membres",
 					joinColumns = @JoinColumn(name = "evenements_id"),
-					inverseJoinColumns = @JoinColumn(name = "membre_id")
+					inverseJoinColumns = @JoinColumn(name = "membres_id")
 	)
 	private List<Membres> membres = new ArrayList<Membres>();
 }
