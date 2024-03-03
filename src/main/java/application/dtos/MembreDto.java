@@ -2,7 +2,7 @@ package application.dtos;
 
 import java.time.LocalDate;
 
-public class MembresDto {
+public class MembreDto {
   private Long Id;
   private String nom;
   private String prenom;

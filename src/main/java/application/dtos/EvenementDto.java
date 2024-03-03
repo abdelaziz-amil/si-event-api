@@ -1,6 +1,6 @@
 package application.dtos;
 
-import application.entities.Membres;
+import application.entities.Membre;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class EvenementsDto {
+public class EvenementDto {
 
 	private Long Id;
 	private String title;
@@ -16,6 +16,6 @@ public class EvenementsDto {
 	private Long locationId;
 	private LocalDate startTime;
 	private LocalDate endTime;
-	private List<Membres> membres = new ArrayList<>();
+	private List<Membre> membres = new ArrayList<>();
 
 }

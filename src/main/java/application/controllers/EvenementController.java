@@ -1,32 +1,32 @@
 package application.controllers;
 
-import application.dtos.EvenementsDto;
-import application.entities.Membres;
-import application.repositories.MembresRepository;
+import application.dtos.EvenementDto;
+import application.entities.Membre;
+import application.repositories.MembreRepository;
 import org.springframework.web.bind.annotation.*;
 
-import application.services.impl.EvenementsServiceImpl;
+import application.services.impl.EvenementServiceImpl;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/events")
-public class EvenementsController {
+public class EvenementController {
 	
-	private final EvenementsServiceImpl evenementsService;
-	private final MembresRepository membresRepository;
+	private final EvenementServiceImpl evenementsService;
+	private final MembreRepository membreRepository;
 
-	public EvenementsController(EvenementsServiceImpl evenementsService, MembresRepository membresRepository) {
+	public EvenementController(EvenementServiceImpl evenementsService, MembreRepository membreRepository) {
 		this.evenementsService = evenementsService;
-		this.membresRepository = membresRepository;
+		this.membreRepository = membreRepository;
 	}
 
 	/**
 	 * <p>Get all members in the system</p>
-	 * @return List<EvenementsDto>
+	 * @return List<EvenementDto>
 	 */
 	@GetMapping
-	public List<EvenementsDto> getEvenements() {
+	public List<EvenementDto> getEvenements() {
 		return evenementsService.getAllEvenements();
 	}
 
@@ -34,16 +34,16 @@ public class EvenementsController {
 	 * Method to get the member based on the ID
 	 */
 	@GetMapping("/{evenetId}")
-	public EvenementsDto getEvenements(@PathVariable Long evenetId){
+	public EvenementDto getEvenements(@PathVariable Long evenetId){
 		return evenementsService.getEvenementById(evenetId);
 	}
 
 	/**
-	 * Create a new Evenements in the system
+	 * Create a new Evenement in the system
 	 */
 	@PostMapping
-	public EvenementsDto saveEvenement(final @RequestBody EvenementsDto evenementsDto){
-		return evenementsService.saveEvenement(evenementsDto);
+	public EvenementDto saveEvenement(final @RequestBody EvenementDto evenementDto){
+		return evenementsService.saveEvenement(evenementDto);
 	}
 
 	/**
@@ -55,29 +55,29 @@ public class EvenementsController {
 	}
 
 	@PutMapping("/{eventId}")
-	public EvenementsDto updateEvenement(@PathVariable Long eventId, @RequestBody EvenementsDto evenementsDto){
-		evenementsDto.setId(eventId);
-		return evenementsService.saveEvenement(evenementsDto);
+	public EvenementDto updateEvenement(@PathVariable Long eventId, @RequestBody EvenementDto evenementDto){
+		evenementDto.setId(eventId);
+		return evenementsService.saveEvenement(evenementDto);
 	}
 
 	@GetMapping("/{eventId}/membres")
-	public List<Membres> getEvenementMembres(@PathVariable Long eventId){
+	public List<Membre> getEvenementMembres(@PathVariable Long eventId){
 		return evenementsService.getEvenementMembres(eventId);
 	}
 
 	@PutMapping("/{eventId}/membres")
-	public EvenementsDto addMembreToEvenement(@PathVariable Long eventId, @RequestBody Membres membres){
-		membres = membresRepository.findById(membres.getId()).orElseThrow(() -> new RuntimeException("Membre non trouvé"));
-		return evenementsService.addMembreToEvenement(eventId, membres);
+	public EvenementDto addMembreToEvenement(@PathVariable Long eventId, @RequestBody Membre membre){
+		membre = membreRepository.findById(membre.getId()).orElseThrow(() -> new RuntimeException("Membre non trouvé"));
+		return evenementsService.addMembreToEvenement(eventId, membre);
 	}
 
 	@PutMapping("/{eventId}/location")
-	public EvenementsDto updateLocation(@PathVariable Long eventId, @RequestBody Long location){
+	public EvenementDto updateLocation(@PathVariable Long eventId, @RequestBody Long location){
 		return evenementsService.updateLocation(eventId, location);
 	}
 
 	@DeleteMapping("/{eventId}/location")
-	public EvenementsDto deleteLocation(@PathVariable Long eventId){
+	public EvenementDto deleteLocation(@PathVariable Long eventId){
 		return evenementsService.deleteLocation(eventId);
 	}
 

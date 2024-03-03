@@ -10,7 +10,7 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Evenements {
+public class Evenement {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long Id;
@@ -25,5 +25,5 @@ public class Evenements {
 					joinColumns = @JoinColumn(name = "evenements_id"),
 					inverseJoinColumns = @JoinColumn(name = "membres_id")
 	)
-	private List<Membres> membres = new ArrayList<Membres>();
+	private List<Membre> membres = new ArrayList<Membre>();
 }

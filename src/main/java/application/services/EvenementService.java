@@ -1,19 +1,19 @@
 package application.services;
 
-import application.dtos.EvenementsDto;
+import application.dtos.EvenementDto;
 
 import java.util.List;
 
-public interface EvenementsService {
+public interface EvenementService {
     /**
      * Sauve a member
      */
-    EvenementsDto saveEvenement(EvenementsDto evenementsDto);
+    EvenementDto saveEvenement(EvenementDto evenementDto);
 
     /**
      * Get a member by it's id
      */
-    EvenementsDto getEvenementById(Long membreId);
+    EvenementDto getEvenementById(Long membreId);
 
     /**
      * Delete a member by it's id
@@ -23,7 +23,7 @@ public interface EvenementsService {
     /**
      * Get all the members
      */
-    List<EvenementsDto> getAllEvenements();
+    List<EvenementDto> getAllEvenements();
 
 
 }

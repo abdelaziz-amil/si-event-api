@@ -1,10 +1,10 @@
 package application.services.impl;
 
-import application.dtos.EvenementsDto;
-import application.entities.Evenements;
-import application.entities.Membres;
-import application.repositories.EvenementsRepository;
-import application.services.EvenementsService;
+import application.dtos.EvenementDto;
+import application.entities.Evenement;
+import application.entities.Membre;
+import application.repositories.EvenementRepository;
+import application.services.EvenementService;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -12,28 +12,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service("evenementsService")
-public class EvenementsServiceImpl implements EvenementsService {
+public class EvenementServiceImpl implements EvenementService {
 
-	private final EvenementsRepository evenementsRepository;
+	private final EvenementRepository evenementsRepository;
 
-    public EvenementsServiceImpl(EvenementsRepository evenementsRepository){
+    public EvenementServiceImpl(EvenementRepository evenementsRepository){
         this.evenementsRepository = evenementsRepository;
     }
 
     @Override
-    public EvenementsDto saveEvenement(EvenementsDto evenementsDto) {
-        // Converts the dto to the evenements entity
-        Evenements evenements = evenementDtoToEntity(evenementsDto);
-        // Save the evenements entity
-        evenements = evenementsRepository.save(evenements);
+    public EvenementDto saveEvenement(EvenementDto evenementDto) {
+        // Converts the dto to the evenement entity
+        Evenement evenement = evenementDtoToEntity(evenementDto);
+        // Save the evenement entity
+        evenement = evenementsRepository.save(evenement);
         // Return the new dto
-        return evenementEntityToDto(evenements);
+        return evenementEntityToDto(evenement);
     }
 
     @Override
-    public EvenementsDto getEvenementById(Long evenementId) {
-        Evenements evenements = evenementsRepository.findById(evenementId).orElseThrow(() -> new EntityNotFoundException("Événement non trouvé"));
-        return evenementEntityToDto(evenements);
+    public EvenementDto getEvenementById(Long evenementId) {
+        Evenement evenement = evenementsRepository.findById(evenementId).orElseThrow(() -> new EntityNotFoundException("Événement non trouvé"));
+        return evenementEntityToDto(evenement);
     }
 
     @Override
@@ -44,80 +44,80 @@ public class EvenementsServiceImpl implements EvenementsService {
     }
 
     @Override
-    public List<EvenementsDto> getAllEvenements() {
-        List<EvenementsDto> evenementsDtos = new ArrayList<>();
-        List<Evenements> evenements = evenementsRepository.findAll();
+    public List<EvenementDto> getAllEvenements() {
+        List<EvenementDto> evenementDtos = new ArrayList<>();
+        List<Evenement> evenements = evenementsRepository.findAll();
         evenements.forEach(evenement -> {
-            evenementsDtos.add(evenementEntityToDto(evenement));
+            evenementDtos.add(evenementEntityToDto(evenement));
         });
-        return evenementsDtos;
+        return evenementDtos;
     }
 
     /**
-     * Map evenements dto to evenements entity
+     * Map evenement dto to evenement entity
      */
-    private EvenementsDto evenementEntityToDto(Evenements evenements){
-        EvenementsDto evenementsDto = new EvenementsDto();
-        evenementsDto.setId(evenements.getId());
-        evenementsDto.setTitle(evenements.getTitle());
-        evenementsDto.setDescription(evenements.getDescription());
-        evenementsDto.setLocationId(evenements.getLocationId());
-        evenementsDto.setEndTime(evenements.getEndTime());
-        evenementsDto.setStartTime(evenements.getStartTime());
-        evenementsDto.setMembres(evenements.getMembres());
-        return evenementsDto;
+    private EvenementDto evenementEntityToDto(Evenement evenement){
+        EvenementDto evenementDto = new EvenementDto();
+        evenementDto.setId(evenement.getId());
+        evenementDto.setTitle(evenement.getTitle());
+        evenementDto.setDescription(evenement.getDescription());
+        evenementDto.setLocationId(evenement.getLocationId());
+        evenementDto.setEndTime(evenement.getEndTime());
+        evenementDto.setStartTime(evenement.getStartTime());
+        evenementDto.setMembres(evenement.getMembres());
+        return evenementDto;
     }
 
     /**
      * Map member entity to member dto
      */
-    private Evenements evenementDtoToEntity(EvenementsDto evenementsDto){
-        Evenements evenements = new Evenements();
-        evenements.setId(evenementsDto.getId());
-        evenements.setTitle(evenementsDto.getTitle());
-        evenements.setDescription(evenementsDto.getDescription());
-        evenements.setLocationId(evenementsDto.getLocationId());
-        evenements.setEndTime(evenementsDto.getEndTime());
-        evenements.setStartTime(evenementsDto.getStartTime());
-        evenements.setMembres(evenementsDto.getMembres());
-        return evenements;
+    private Evenement evenementDtoToEntity(EvenementDto evenementDto){
+        Evenement evenement = new Evenement();
+        evenement.setId(evenementDto.getId());
+        evenement.setTitle(evenementDto.getTitle());
+        evenement.setDescription(evenementDto.getDescription());
+        evenement.setLocationId(evenementDto.getLocationId());
+        evenement.setEndTime(evenementDto.getEndTime());
+        evenement.setStartTime(evenementDto.getStartTime());
+        evenement.setMembres(evenementDto.getMembres());
+        return evenement;
     }
 
     /**
      * Get all the members in an event
      * @param evenementId The id of the event
-     * @return List<Membres>
+     * @return List<Membre>
      */
-    public List<Membres> getEvenementMembres(Long evenementId){
-        Evenements evenements = evenementsRepository.findById(evenementId).orElseThrow(() -> new EntityNotFoundException("Événement non trouvé"));
-        return evenements.getMembres();
+    public List<Membre> getEvenementMembres(Long evenementId){
+        Evenement evenement = evenementsRepository.findById(evenementId).orElseThrow(() -> new EntityNotFoundException("Événement non trouvé"));
+        return evenement.getMembres();
     }
 
     /**
      * Add a member to an event or Replace the member if it already exists by Id
      * @param evenementId The id of the event
-     * @param membres The member to add
-     * @return EvenementsDto
+     * @param membre The member to add
+     * @return EvenementDto
      */
-    public EvenementsDto addMembreToEvenement(Long evenementId, Membres membres) {
-        Evenements evenements = evenementsRepository.findById(evenementId).orElseThrow(() -> new EntityNotFoundException("Événement non trouvé"));
-        evenements.getMembres().removeIf(m -> m.getId().equals(membres.getId()));
-        evenements.getMembres().add(membres);
-        evenements = evenementsRepository.save(evenements);
-        return evenementEntityToDto(evenements);
+    public EvenementDto addMembreToEvenement(Long evenementId, Membre membre) {
+        Evenement evenement = evenementsRepository.findById(evenementId).orElseThrow(() -> new EntityNotFoundException("Événement non trouvé"));
+        evenement.getMembres().removeIf(m -> m.getId().equals(membre.getId()));
+        evenement.getMembres().add(membre);
+        evenement = evenementsRepository.save(evenement);
+        return evenementEntityToDto(evenement);
     }
 
-    public EvenementsDto updateLocation(Long evenementId, Long location){
-        Evenements evenements = evenementsRepository.findById(evenementId).orElseThrow(() -> new EntityNotFoundException("Événement non trouvé"));
-        evenements.setLocationId(location);
-        evenements = evenementsRepository.save(evenements);
-        return evenementEntityToDto(evenements);
+    public EvenementDto updateLocation(Long evenementId, Long location){
+        Evenement evenement = evenementsRepository.findById(evenementId).orElseThrow(() -> new EntityNotFoundException("Événement non trouvé"));
+        evenement.setLocationId(location);
+        evenement = evenementsRepository.save(evenement);
+        return evenementEntityToDto(evenement);
     }
 
-    public EvenementsDto deleteLocation(Long evenementId){
-        Evenements evenements = evenementsRepository.findById(evenementId).orElseThrow(() -> new EntityNotFoundException("Événement non trouvé"));
-        evenements.setLocationId(null);
-        evenements = evenementsRepository.save(evenements);
-        return evenementEntityToDto(evenements);
+    public EvenementDto deleteLocation(Long evenementId){
+        Evenement evenement = evenementsRepository.findById(evenementId).orElseThrow(() -> new EntityNotFoundException("Événement non trouvé"));
+        evenement.setLocationId(null);
+        evenement = evenementsRepository.save(evenement);
+        return evenementEntityToDto(evenement);
     }
 }
