@@ -1,9 +1,6 @@
 package application.entities;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.*;
 
@@ -15,15 +12,15 @@ import lombok.Data;
 public class Evenement {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long Id;
+	private Long id;
 	@Column(name = "titre")
-	private String title;
+	private String titre;
 	@Column(name = "description")
 	private String description;
 	@Column(name = "lieuId")
-	private Long locationId;
+	private Long lieuId;
 	@Column(name = "dateHeureDebut")
-	private LocalDateTime startTime;
+	private LocalDateTime dateHeureDebut;
 	@Column(name = "dateHeureFin")
-	private LocalDateTime endTime;
+	private LocalDateTime dateHeureFin;
 }

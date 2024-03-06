@@ -73,11 +73,11 @@ public class EvenementServiceImpl implements EvenementService {
     private EvenementDto evenementEntityToDto(Evenement evenement){
         EvenementDto evenementDto = new EvenementDto();
         evenementDto.setId(evenement.getId());
-        evenementDto.setTitle(evenement.getTitle());
+        evenementDto.setTitre(evenement.getTitre());
         evenementDto.setDescription(evenement.getDescription());
-        evenementDto.setLocationId(evenement.getLocationId());
-        evenementDto.setEndTime(evenement.getEndTime());
-        evenementDto.setStartTime(evenement.getStartTime());
+        evenementDto.setLieuId(evenement.getLieuId());
+        evenementDto.setDateHeureFin(evenement.getDateHeureFin());
+        evenementDto.setDateHeureDebut(evenement.getDateHeureDebut());
         return evenementDto;
     }
 
@@ -87,11 +87,11 @@ public class EvenementServiceImpl implements EvenementService {
     private Evenement evenementDtoToEntity(EvenementDto evenementDto){
         Evenement evenement = new Evenement();
         evenement.setId(evenementDto.getId());
-        evenement.setTitle(evenementDto.getTitle());
+        evenement.setTitre(evenementDto.getTitre());
         evenement.setDescription(evenementDto.getDescription());
-        evenement.setLocationId(evenementDto.getLocationId());
-        evenement.setEndTime(evenementDto.getEndTime());
-        evenement.setStartTime(evenementDto.getStartTime());
+        evenement.setLieuId(evenementDto.getLieuId());
+        evenement.setDateHeureFin(evenementDto.getDateHeureFin());
+        evenement.setDateHeureDebut(evenementDto.getDateHeureDebut());
         return evenement;
     }
 
@@ -140,7 +140,7 @@ public class EvenementServiceImpl implements EvenementService {
     @Override
     public EvenementDto updateLocation(Long evenementId, Long location){
         Evenement evenement = evenementsRepository.findById(evenementId).orElseThrow(() -> new EntityNotFoundException("Événement non trouvé"));
-        evenement.setLocationId(location);
+        evenement.setLieuId(location);
         evenement = evenementsRepository.save(evenement);
         return evenementEntityToDto(evenement);
     }
