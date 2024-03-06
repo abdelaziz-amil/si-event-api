@@ -82,9 +82,4 @@ public class EvenementController {
 		return evenementsService.updateLocation(eventId, location);
 	}
 
-	@DeleteMapping("/{eventId}/location")
-	public EvenementDto deleteLocation(@PathVariable Long eventId){
-		return evenementsService.deleteLocation(eventId);
-	}
-
 }

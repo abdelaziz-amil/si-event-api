@@ -40,7 +40,6 @@ public interface EvenementService {
     /**
      * delete the location of an event
      */
-    public EvenementDto deleteLocation(Long evenementId);
 
     public ResponseEntity<?> removeMembreFromEvenement(Long eventId, Long membreId);
 

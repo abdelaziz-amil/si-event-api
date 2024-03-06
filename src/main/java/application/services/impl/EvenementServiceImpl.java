@@ -144,13 +144,6 @@ public class EvenementServiceImpl implements EvenementService {
         evenement = evenementsRepository.save(evenement);
         return evenementEntityToDto(evenement);
     }
-    @Override
-    public EvenementDto deleteLocation(Long evenementId){
-        Evenement evenement = evenementsRepository.findById(evenementId).orElseThrow(() -> new EntityNotFoundException("Événement non trouvé"));
-        evenement.setLocationId(null);
-        evenement = evenementsRepository.save(evenement);
-        return evenementEntityToDto(evenement);
-    }
 
     @Override
     public ResponseEntity<?> removeMembreFromEvenement(Long eventId, Long membreId) {
