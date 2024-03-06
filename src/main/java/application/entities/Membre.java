@@ -1,6 +1,5 @@
 package application.entities;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.*;
@@ -13,10 +12,16 @@ import lombok.Data;
 public class Membre {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long Id;
+  @Column(name = "nom")
   private String nom;
+  @Column(name = "prenom")
   private String prenom;
+  @Column(name = "adresse")
   private String adresse;
+  @Column(name = "dateNaissance")
   private LocalDateTime dateNaissance;
-  private String mail;
+  @Column(name = "email")
+  private String email;
+  @Column(name = "motDePasse")
   private String motDePasse;
 }

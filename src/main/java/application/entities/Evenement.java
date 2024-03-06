@@ -18,6 +18,7 @@ public class Evenement {
 	private Long Id;
 	@Column(name = "titre")
 	private String title;
+	@Column(name = "description")
 	private String description;
 	@Column(name = "lieuId")
 	private Long locationId;
