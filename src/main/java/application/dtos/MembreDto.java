@@ -1,8 +1,10 @@
 package application.dtos;
 
-import java.time.LocalDate;
+import lombok.Data;
+
 import java.time.LocalDateTime;
 
+@Data
 public class MembreDto {
   private Long Id;
   private String nom;
