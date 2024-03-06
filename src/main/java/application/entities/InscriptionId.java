@@ -3,6 +3,7 @@ package application.entities;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
@@ -11,7 +12,9 @@ import java.util.Objects;
 @Getter
 @Embeddable
 public class InscriptionId implements Serializable {
+  @Column(name = "membreId")
   private Long idMembre;
+  @Column(name = "evenementId")
   private Long idEvenement;
 
   @Override
