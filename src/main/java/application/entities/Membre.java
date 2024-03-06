@@ -1,6 +1,7 @@
 package application.entities;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,7 +18,7 @@ public class Membre {
   private String nom;
   private String prenom;
   private String adresse;
-  private LocalDate dateNaissance;
+  private LocalDateTime dateNaissance;
   private String mail;
   private String motDePasse;
 }

@@ -3,6 +3,7 @@ package application.controllers;
 import application.dtos.EvenementDto;
 import application.entities.Membre;
 import application.repositories.MembreRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import application.services.impl.EvenementServiceImpl;
@@ -50,7 +51,7 @@ public class EvenementController {
 	 * Delete a member by it's id
 	 */
 	@DeleteMapping("/{eventId}")
-	public Boolean deleteMembre(@PathVariable Long eventId){
+	public ResponseEntity<?> deleteEvenement(@PathVariable Long eventId){
 		return evenementsService.deleteEvenement(eventId);
 	}
 
@@ -61,14 +62,19 @@ public class EvenementController {
 	}
 
 	@GetMapping("/{eventId}/membres")
-	public List<Membre> getEvenementMembres(@PathVariable Long eventId){
+	public ResponseEntity<?> getEvenementMembres(@PathVariable Long eventId){
 		return evenementsService.getEvenementMembres(eventId);
 	}
 
 	@PutMapping("/{eventId}/membres")
-	public EvenementDto addMembreToEvenement(@PathVariable Long eventId, @RequestBody Membre membre){
-		membre = membreRepository.findById(membre.getId()).orElseThrow(() -> new RuntimeException("Membre non trouvé"));
-		return evenementsService.addMembreToEvenement(eventId, membre);
+	public void addMembreToEvenement(@PathVariable Long eventId, @RequestBody Membre membre){
+		membre = membreRepository.findById(membre.getId()).orElseThrow(() -> new RuntimeException("Les données fournies sont invalides"));
+		evenementsService.addMembreToEvenement(eventId, membre);
+	}
+
+	@DeleteMapping("/{eventId}/membres/{membreId}")
+	public void removeMembreFromEvenement(@PathVariable Long eventId, @PathVariable Long membreId){
+		evenementsService.removeMembreFromEvenement(eventId, membreId);
 	}
 
 	@PutMapping("/{eventId}/location")

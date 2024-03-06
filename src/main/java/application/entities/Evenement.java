@@ -1,6 +1,7 @@
 package application.entities;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,16 +15,13 @@ public class Evenement {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long Id;
+	@Column(name = "titre")
 	private String title;
 	private String description;
+	@Column(name = "lieuId")
 	private Long locationId;
-	private LocalDate startTime;
-	private LocalDate endTime;
-	@ManyToMany
-	@JoinTable(
-					name = "evenements_membres",
-					joinColumns = @JoinColumn(name = "evenements_id"),
-					inverseJoinColumns = @JoinColumn(name = "membres_id")
-	)
-	private List<Membre> membres = new ArrayList<Membre>();
+	@Column(name = "dateHeureDebut")
+	private LocalDateTime startTime;
+	@Column(name = "dateHeureFin")
+	private LocalDateTime endTime;
 }
