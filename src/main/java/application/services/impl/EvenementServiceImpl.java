@@ -98,12 +98,36 @@ public class EvenementServiceImpl {
                 HttpStatus.NOT_FOUND);
         if (!membreRepository.existsById(membre.getId())) return new ResponseEntity<>(Collections.singletonMap("message", "Membre non trouvé"),
                 HttpStatus.NOT_FOUND);
+
+        // Vérification du chevauchement d'événement
+        Evenement evenementAverifier = evenementsRepository.findById(evenementId)
+                .orElseThrow(() -> new EntityNotFoundException("Événement non trouvé"));
+
+        List<Long> evenementsIds = inscriptionRepository.findEvenementIdsByMembreId(membre.getId());
+        List<Evenement> evenements = evenementsRepository.findAllById(evenementsIds);
+
+        for (Evenement evenement : evenements) {
+            boolean debutChevauche = evenement.getDateHeureDebut().isBefore(evenementAverifier.getDateHeureFin())
+                    && evenement.getDateHeureDebut().isAfter(evenementAverifier.getDateHeureDebut());
+            boolean finChevauche = evenement.getDateHeureFin().isBefore(evenementAverifier.getDateHeureFin())
+                    && evenement.getDateHeureFin().isAfter(evenementAverifier.getDateHeureDebut());
+            boolean inclusDans = evenement.getDateHeureDebut().isBefore(evenementAverifier.getDateHeureDebut())
+                    && evenement.getDateHeureFin().isAfter(evenementAverifier.getDateHeureFin());
+
+            if (debutChevauche || finChevauche || inclusDans) {
+                return new ResponseEntity<>(Collections.singletonMap("error", "Le membre est déjà inscrit à un événement qui se déroule au même moment"),
+                        HttpStatus.BAD_REQUEST);
+            }
+        }
+
+
         Inscription inscription = new Inscription();
         InscriptionId inscriptionId = new InscriptionId();
         inscriptionId.setIdMembre(membre.getId());
         inscriptionId.setIdEvenement(evenementId);
         inscription.setId(inscriptionId);
         inscription.setDateHeureInscription(LocalDateTime.now());
+
         inscriptionRepository.save(inscription);
         return new ResponseEntity<>(membre, HttpStatus.OK);
     }

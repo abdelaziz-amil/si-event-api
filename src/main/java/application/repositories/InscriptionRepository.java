@@ -20,4 +20,7 @@ public interface InscriptionRepository extends JpaRepository<Inscription, Inscri
 
   @Query("SELECT i.id.idMembre FROM Inscription i WHERE i.id.idEvenement = :evenementId")
   List<Long> findMembreIdsByEvenementId(@Param("evenementId") Long evenementId);
+
+  @Query("SELECT i.id.idEvenement FROM Inscription i WHERE i.id.idMembre = :membreId")
+  List<Long> findEvenementIdsByMembreId(@Param("membreId") Long membreId);
 }
