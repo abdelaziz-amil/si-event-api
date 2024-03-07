@@ -1,6 +1,7 @@
 package application.services.impl;
 
 import application.dtos.EvenementDto;
+import application.dtos.EvenementPostDto;
 import application.entities.Evenement;
 import application.entities.Inscription;
 import application.entities.InscriptionId;
@@ -20,9 +21,9 @@ import java.util.Collections;
 import java.util.List;
 
 @Service("evenementsService")
-public class EvenementServiceImpl implements EvenementService {
+public class EvenementServiceImpl {
 
-	  private final EvenementRepository evenementsRepository;
+    private final EvenementRepository evenementsRepository;
     private final InscriptionRepository inscriptionRepository;
     private final MembreRepository membreRepository;
 
@@ -32,23 +33,17 @@ public class EvenementServiceImpl implements EvenementService {
         this.membreRepository = membreRepository;
     }
 
-    @Override
-    public EvenementDto saveEvenement(EvenementDto evenementDto) {
-        // Converts the dto to the evenement entity
+    public EvenementDto saveEvenement(EvenementPostDto evenementDto) {
         Evenement evenement = evenementDtoToEntity(evenementDto);
-        // Save the evenement entity
         evenement = evenementsRepository.save(evenement);
-        // Return the new dto
         return evenementEntityToDto(evenement);
     }
 
-    @Override
     public EvenementDto getEvenementById(Long evenementId) {
         Evenement evenement = evenementsRepository.findById(evenementId).orElseThrow(() -> new EntityNotFoundException("Événement non trouvé"));
         return evenementEntityToDto(evenement);
     }
 
-    @Override
     public ResponseEntity<?> deleteEvenement(Long evenementId) {
         if(!evenementsRepository.existsById(evenementId)) return new ResponseEntity<>(Collections.singletonMap("message", "Événement non trouvé"),
                 HttpStatus.NOT_FOUND);
@@ -57,7 +52,6 @@ public class EvenementServiceImpl implements EvenementService {
         return new ResponseEntity<>(Collections.singletonMap("message", "Événement supprimé"), HttpStatus.OK);
     }
 
-    @Override
     public List<EvenementDto> getAllEvenements() {
         List<EvenementDto> evenementDtos = new ArrayList<>();
         List<Evenement> evenements = evenementsRepository.findAll();
@@ -67,9 +61,6 @@ public class EvenementServiceImpl implements EvenementService {
         return evenementDtos;
     }
 
-    /**
-     * Map evenement dto to evenement entity
-     */
     private EvenementDto evenementEntityToDto(Evenement evenement){
         EvenementDto evenementDto = new EvenementDto();
         evenementDto.setId(evenement.getId());
@@ -81,12 +72,8 @@ public class EvenementServiceImpl implements EvenementService {
         return evenementDto;
     }
 
-    /**
-     * Map member entity to member dto
-     */
-    private Evenement evenementDtoToEntity(EvenementDto evenementDto){
+    private Evenement evenementDtoToEntity(EvenementPostDto evenementDto){
         Evenement evenement = new Evenement();
-        evenement.setId(evenementDto.getId());
         evenement.setTitre(evenementDto.getTitre());
         evenement.setDescription(evenementDto.getDescription());
         evenement.setLieuId(evenementDto.getLieuId());
@@ -95,17 +82,9 @@ public class EvenementServiceImpl implements EvenementService {
         return evenement;
     }
 
-    /**
-     * Get all the members in an event
-     * @param evenementId The id of the event
-     * @return ResponseEntity<?>
-     */
     public ResponseEntity<?> getEvenementMembres(Long evenementId){
-
         List<Long> membresIds = inscriptionRepository.findMembreIdsByEvenementId(evenementId);
-
         List<Membre> membres = membreRepository.findAllById(membresIds);
-
         if (!membres.isEmpty()) {
             return new ResponseEntity<>(membres, HttpStatus.OK);
         } else {
@@ -114,30 +93,31 @@ public class EvenementServiceImpl implements EvenementService {
         }
     }
 
-    /**
-     * Add a member to an event or Replace the member if it already exists by Id
-     * @param evenementId The id of the event
-     * @param membre The member to add
-     * @return ResponseEntity<?>
-     */
-    @Override
     public ResponseEntity<?> addMembreToEvenement(Long evenementId, Membre membre) {
         if (!evenementsRepository.existsById(evenementId)) return new ResponseEntity<>(Collections.singletonMap("message", "L'évènement spécifié n'a pas été trouvé"),
                 HttpStatus.NOT_FOUND);
-
         Inscription inscription = new Inscription();
         InscriptionId inscriptionId = new InscriptionId();
         inscriptionId.setIdMembre(membre.getId());
         inscriptionId.setIdEvenement(evenementId);
         inscription.setId(inscriptionId);
-
         inscription.setDateHeureInscription(LocalDateTime.now());
-
-        // Enregistrer l'Inscription dans la base de données
         inscriptionRepository.save(inscription);
         return new ResponseEntity<>(membre, HttpStatus.OK);
     }
-    @Override
+
+    public EvenementDto updateEvenement(Long evenementId, EvenementPostDto evenementDto) {
+        Evenement evenement = evenementsRepository.findById(evenementId)
+                .orElseThrow(() -> new EntityNotFoundException("Événement non trouvé"));
+        evenement.setTitre(evenementDto.getTitre());
+        evenement.setDescription(evenementDto.getDescription());
+        evenement.setLieuId(evenementDto.getLieuId());
+        evenement.setDateHeureFin(evenementDto.getDateHeureFin());
+        evenement.setDateHeureDebut(evenementDto.getDateHeureDebut());
+        evenement = evenementsRepository.save(evenement);
+        return evenementEntityToDto(evenement);
+    }
+
     public EvenementDto updateLocation(Long evenementId, Long location){
         Evenement evenement = evenementsRepository.findById(evenementId).orElseThrow(() -> new EntityNotFoundException("Événement non trouvé"));
         evenement.setLieuId(location);
@@ -145,7 +125,6 @@ public class EvenementServiceImpl implements EvenementService {
         return evenementEntityToDto(evenement);
     }
 
-    @Override
     public ResponseEntity<?> removeMembreFromEvenement(Long eventId, Long membreId) {
         if (!evenementsRepository.existsById(eventId)) return new ResponseEntity<>(Collections.singletonMap("message", "L'évènement spécifié n'a pas été trouvé"),
                 HttpStatus.NOT_FOUND);
