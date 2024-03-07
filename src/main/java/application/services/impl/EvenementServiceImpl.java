@@ -2,6 +2,7 @@ package application.services.impl;
 
 import application.dtos.EvenementDto;
 import application.dtos.EvenementPostDto;
+import application.dtos.MembreInscriptionDto;
 import application.entities.Evenement;
 import application.entities.Inscription;
 import application.entities.InscriptionId;
@@ -9,7 +10,6 @@ import application.entities.Membre;
 import application.repositories.EvenementRepository;
 import application.repositories.InscriptionRepository;
 import application.repositories.MembreRepository;
-import application.services.EvenementService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -93,8 +93,10 @@ public class EvenementServiceImpl {
         }
     }
 
-    public ResponseEntity<?> addMembreToEvenement(Long evenementId, Membre membre) {
+    public ResponseEntity<?> addMembreToEvenement(Long evenementId, MembreInscriptionDto membre) {
         if (!evenementsRepository.existsById(evenementId)) return new ResponseEntity<>(Collections.singletonMap("message", "L'évènement spécifié n'a pas été trouvé"),
+                HttpStatus.NOT_FOUND);
+        if (!membreRepository.existsById(membre.getId())) return new ResponseEntity<>(Collections.singletonMap("message", "Membre non trouvé"),
                 HttpStatus.NOT_FOUND);
         Inscription inscription = new Inscription();
         InscriptionId inscriptionId = new InscriptionId();

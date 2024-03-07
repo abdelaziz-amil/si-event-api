@@ -2,7 +2,7 @@ package application.controllers;
 
 import application.dtos.EvenementDto;
 import application.dtos.EvenementPostDto;
-import application.entities.Membre;
+import application.dtos.MembreInscriptionDto;
 import application.repositories.MembreRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -54,8 +54,7 @@ public class EvenementController {
 	}
 
 	@PutMapping("/{eventId}/membres")
-	public ResponseEntity<?> addMembreToEvenement(@PathVariable Long eventId, @RequestBody Membre membre){
-		membre = membreRepository.findById(membre.getId()).orElseThrow(() -> new RuntimeException("Les données fournies sont invalides"));
+	public ResponseEntity<?> addMembreToEvenement(@PathVariable Long eventId, @RequestBody MembreInscriptionDto membre){
 		return evenementsService.addMembreToEvenement(eventId, membre);
 	}
 
