@@ -29,4 +29,4 @@ Les scripts de lancements lancent également docker desktop sur windows.
 
 Le projet est accessible à l'adresse `http://localhost:8080`.
 
-Toutes les fonctionnalités fonctionnent.
+Toutes les fonctionnalités présentes sur la page fonctionnent.
