@@ -1,0 +1,842 @@
+{
+	"info": {
+		"_postman_id": "9254ff5d-5c7c-45e5-a917-eff328aa7867",
+		"name": "si-commentaire-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32481718"
+	},
+	"item": [
+		{
+			"name": "post-commentaire",
+			"item": [
+				{
+					"name": "/commentaire-success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 for successful insertion\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response has success message\", function() {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.eql(\"Commentaire créé avec succès\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"evenementId\": 1,\r\n  \"auteurId\": 101,\r\n  \"texte\": \"Ceci est un commentaire test.\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8085/commentaire",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"commentaire"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/commentaire-failure-auteurid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 for invalid request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response has error message\", function() {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.eql(\"Format de données incorrect.\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"evenementId\": 1,\r\n  \"auteurId\": \"incorrect\",\r\n  \"texte\": \"Ceci est un commentaire test.\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8085/commentaire",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"commentaire"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/commentaire-failure-evenementid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 for invalid request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"pm.test(\"Response has error message\", function() {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.eql(\"Données de commentaire invalides.\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"evenementId\": -1,\r\n  \"auteurId\": 101,\r\n  \"texte\": \"Ceci est un commentaire test.\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8081/commentaire",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"commentaire"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "get-commentaire",
+			"item": [
+				{
+					"name": "/commentaire-success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>ID</th>\r",
+									"        <th>Event ID</th>\r",
+									"        <th>Author ID</th>\r",
+									"        <th>Date of Message</th>\r",
+									"        <th>Text</th>\r",
+									"    </tr>\r",
+									"    \r",
+									"    {{#each response}}\r",
+									"        <tr>\r",
+									"            <td>{{id}}</td>\r",
+									"            <td>{{evenementId}}</td>\r",
+									"            <td>{{auteurId}}</td>\r",
+									"            <td>{{dateMessage}}</td>\r",
+									"            <td>{{texte}}</td>\r",
+									"        </tr>\r",
+									"    {{/each}}\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return {response: pm.response.json()}\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8085/commentaire",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"commentaire"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/commentaire-by-id-success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>ID</th>\r",
+									"        <th>Event ID</th>\r",
+									"        <th>Author ID</th>\r",
+									"        <th>Date of Message</th>\r",
+									"        <th>Text</th>\r",
+									"    </tr>\r",
+									"    \r",
+									"    {{#each response}}\r",
+									"        <tr>\r",
+									"            <td>{{id}}</td>\r",
+									"            <td>{{evenementId}}</td>\r",
+									"            <td>{{auteurId}}</td>\r",
+									"            <td>{{dateMessage}}</td>\r",
+									"            <td>{{texte}}</td>\r",
+									"        </tr>\r",
+									"    {{/each}}\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return {response: pm.response.json()}\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "id",
+								"value": "1",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "localhost:8081/commentaire/10",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"commentaire",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/commentaire-by-id-failure-id-negative",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>ID</th>\r",
+									"        <th>Event ID</th>\r",
+									"        <th>Author ID</th>\r",
+									"        <th>Date of Message</th>\r",
+									"        <th>Text</th>\r",
+									"    </tr>\r",
+									"    \r",
+									"    {{#each response}}\r",
+									"        <tr>\r",
+									"            <td>{{id}}</td>\r",
+									"            <td>{{evenementId}}</td>\r",
+									"            <td>{{auteurId}}</td>\r",
+									"            <td>{{dateMessage}}</td>\r",
+									"            <td>{{texte}}</td>\r",
+									"        </tr>\r",
+									"    {{/each}}\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return {response: pm.response.json()}\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "id",
+								"value": "1",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "localhost:8085/commentaire/-1",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"commentaire",
+								"-1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/commentaire-by-id-failure-id-not-found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>ID</th>\r",
+									"        <th>Event ID</th>\r",
+									"        <th>Author ID</th>\r",
+									"        <th>Date of Message</th>\r",
+									"        <th>Text</th>\r",
+									"    </tr>\r",
+									"    \r",
+									"    {{#each response}}\r",
+									"        <tr>\r",
+									"            <td>{{id}}</td>\r",
+									"            <td>{{evenementId}}</td>\r",
+									"            <td>{{auteurId}}</td>\r",
+									"            <td>{{dateMessage}}</td>\r",
+									"            <td>{{texte}}</td>\r",
+									"        </tr>\r",
+									"    {{/each}}\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return {response: pm.response.json()}\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "id",
+								"value": "1",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "localhost:8081/commentaire/1000000",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"commentaire",
+								"1000000"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/commentaire-by-id-failure-id-a-string",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>ID</th>\r",
+									"        <th>Event ID</th>\r",
+									"        <th>Author ID</th>\r",
+									"        <th>Date of Message</th>\r",
+									"        <th>Text</th>\r",
+									"    </tr>\r",
+									"    \r",
+									"    {{#each response}}\r",
+									"        <tr>\r",
+									"            <td>{{id}}</td>\r",
+									"            <td>{{evenementId}}</td>\r",
+									"            <td>{{auteurId}}</td>\r",
+									"            <td>{{dateMessage}}</td>\r",
+									"            <td>{{texte}}</td>\r",
+									"        </tr>\r",
+									"    {{/each}}\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return {response: pm.response.json()}\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "id",
+								"value": "1",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "localhost:8081/commentaire/",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"commentaire",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "delete-commentaire",
+			"item": [
+				{
+					"name": "/commentaire-by-id-success",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8085/commentaire/10",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"commentaire",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/commentaire-by-id-failure-id-not-found",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8085/commentaire/500",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"commentaire",
+								"500"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/commentaire-by-id-failure-id-negative",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8085/commentaire/-5",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"commentaire",
+								"-5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/commentaire-by-id-failure-id-a-string",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/commentaire?id=5jkjk",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"commentaire"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "5jkjk"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/commentaire-by-id-failure-id-manquant",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/commentaire",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"commentaire"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "put-commentaire",
+			"item": [
+				{
+					"name": "/commentaire-by-id-success",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"evenementId\": 1,\r\n  \"auteurId\": 101,\r\n  \"dateMessage\": \"2021-02-24T13:00:00Z\",\r\n  \"texte\": \"Ceci est un commentaire test453.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8085/commentaire/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"commentaire",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/commentaire-by-id-failure-id-negative",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"evenementId\": 1,\r\n  \"auteurId\": 101,\r\n  \"dateMessage\": \"2021-02-24T13:00:00Z\",\r\n  \"texte\": \"Ceci est un commentaire test2.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8085/commentaire/-5",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"commentaire",
+								"-5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/commentaire-by-id-failure-id-not-found",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"evenementId\": 1,\r\n  \"auteurId\": 101,\r\n  \"dateMessage\": \"2021-02-24T13:00:00Z\",\r\n  \"texte\": \"Ceci est un commentaire test2.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8081/commentaire?id=50000",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"commentaire"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "50000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/commentaire-by-id-failure-id-a-string",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"evenementId\": 1,\r\n  \"auteurId\": 101,\r\n  \"dateMessage\": \"2021-02-24T13:00:00Z\",\r\n  \"texte\": \"Ceci est un commentaire test2.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8081/commentaire?id=50000safs",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"commentaire"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "50000safs"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "get-commentaires-evenement",
+			"item": [
+				{
+					"name": "/commentaire/evenement-by-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/commentaire/evenement/10",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"commentaire",
+								"evenement",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/commentaire/evenement-by-id-negative",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/commentaire/evenement?id=4",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"commentaire",
+								"evenement"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/commentaire/evenement-by-id-not-found",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/commentaire/evenement?id=4",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"commentaire",
+								"evenement"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/commentaire/evenement-by-id-a-string",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/commentaire/evenement?id=4",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"commentaire",
+								"evenement"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
